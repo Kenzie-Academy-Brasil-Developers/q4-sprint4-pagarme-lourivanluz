@@ -10,72 +10,56 @@ class TestAccounst(APITestCase):
     def setUpTestData(cls):
 
         cls.admin_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234",
-            'first_name': "Jane",
-            'last_name': "Doe",
-            'is_seller': False,
-            'is_admin': True
+            "email": "admin@mail.com",
+            "password": "admin1234",
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "is_seller": False,
+            "is_admin": True,
         }
 
         cls.seller_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234",
-            'first_name': "John",
-            'last_name': "Doe",
-            'is_seller': True,
-            'is_admin': False
+            "email": "seller@mail.com",
+            "password": "seller1234",
+            "first_name": "John",
+            "last_name": "Doe",
+            "is_seller": True,
+            "is_admin": False,
         }
 
         cls.buyer_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234",
-            'first_name': "Mary",
-            'last_name': "Jane",
-            'is_seller': False,
-            'is_admin': False
+            "email": "buyer@mail.com",
+            "password": "buyer1234",
+            "first_name": "Mary",
+            "last_name": "Jane",
+            "is_seller": False,
+            "is_admin": False,
         }
 
         cls.user_data_wrong = {
-            'e-mail': "user@mail.com",
-            'password': "user1234",
-            'first_name': "Peter",
-            'last_name': "Parker",
-            'is_admin': False
+            "e-mail": "user@mail.com",
+            "password": "user1234",
+            "first_name": "Peter",
+            "last_name": "Parker",
+            "is_admin": False,
         }
 
-        cls.admin_login_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234"
-        }
+        cls.admin_login_data = {"email": "admin@mail.com", "password": "admin1234"}
 
-        cls.seller_login_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234"
-        }
+        cls.seller_login_data = {"email": "seller@mail.com", "password": "seller1234"}
 
-        cls.buyer_login_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234"
-        }
+        cls.buyer_login_data = {"email": "buyer@mail.com", "password": "buyer1234"}
 
-        cls.wrong_login_email = {
-            'email': "wrong@mail.com",
-            'password': "admin1234"
-        }
+        cls.wrong_login_email = {"email": "wrong@mail.com", "password": "admin1234"}
 
-        cls.wrong_login_password = {
-            'email': "admin@mail.com",
-            'password': "wrong1234"
-        }
+        cls.wrong_login_password = {"email": "admin@mail.com", "password": "wrong1234"}
 
         cls.wrong_login_missing_password_field = {
-            'email': "admin@mail.com",
+            "email": "admin@mail.com",
         }
 
     def test_create_account_admin_success_201(self):
-        response = self.client.post(
-            "/api/accounts/", self.admin_data, format="json")
+        response = self.client.post("/api/accounts/", self.admin_data, format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 201)
@@ -93,8 +77,7 @@ class TestAccounst(APITestCase):
         self.assertEqual(output["is_seller"], self.admin_data["is_seller"])
 
     def test_create_account_seller_success_201(self):
-        response = self.client.post(
-            "/api/accounts/", self.seller_data, format="json")
+        response = self.client.post("/api/accounts/", self.seller_data, format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 201)
@@ -112,8 +95,7 @@ class TestAccounst(APITestCase):
         self.assertEqual(output["is_seller"], self.seller_data["is_seller"])
 
     def test_create_account_buyer_success_201(self):
-        response = self.client.post(
-            "/api/accounts/", self.buyer_data, format="json")
+        response = self.client.post("/api/accounts/", self.buyer_data, format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 201)
@@ -133,8 +115,7 @@ class TestAccounst(APITestCase):
     def test_create_account_duplicated_email_fail_400(self):
         # Trying to create the same user twice
         self.client.post("/api/accounts/", self.buyer_data, format="json")
-        response = self.client.post(
-            "/api/accounts/", self.buyer_data, format="json")
+        response = self.client.post("/api/accounts/", self.buyer_data, format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
@@ -143,7 +124,8 @@ class TestAccounst(APITestCase):
     def test_create_account_wrong_fields_fail_400(self):
         # Trying to create user with wrong fields
         response = self.client.post(
-            "/api/accounts/", self.user_data_wrong, format="json")
+            "/api/accounts/", self.user_data_wrong, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
@@ -155,8 +137,7 @@ class TestAccounst(APITestCase):
         # Creating admin user for testing login
         self.client.post("/api/accounts/", self.admin_data, format="json")
 
-        response = self.client.post(
-            "/api/login/", self.admin_login_data, format="json")
+        response = self.client.post("/api/login/", self.admin_login_data, format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -167,13 +148,15 @@ class TestAccounst(APITestCase):
 
         # Trying to login with wrong email
         response = self.client.post(
-            "/api/login/", self.wrong_login_email, format="json")
+            "/api/login/", self.wrong_login_email, format="json"
+        )
 
         self.assertEqual(response.status_code, 401)
 
         # Trying to login with wrong password
         response = self.client.post(
-            "/api/login/", self.wrong_login_password, format="json")
+            "/api/login/", self.wrong_login_password, format="json"
+        )
 
         self.assertEqual(response.status_code, 401)
 
@@ -182,9 +165,8 @@ class TestAccounst(APITestCase):
 
         # Trying to login without password field
         response = self.client.post(
-            "/api/login/",
-            self.wrong_login_missing_password_field,
-            format="json")
+            "/api/login/", self.wrong_login_missing_password_field, format="json"
+        )
 
         output = response.json()
 
@@ -219,8 +201,8 @@ class TestAccounst(APITestCase):
 
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            output,
-            {'detail': 'You do not have permission to perform this action.'})
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_buyer_list_users_fail_403(self):
         # Creating and login with buyer user
@@ -235,8 +217,8 @@ class TestAccounst(APITestCase):
 
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            output,
-            {'detail': 'You do not have permission to perform this action.'})
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_list_users_fail_401(self):
         # Trying to list user without authentication
@@ -245,66 +227,56 @@ class TestAccounst(APITestCase):
 
         self.assertEqual(response.status_code, 401)
         self.assertEqual(
-            output,
-            {'detail': 'Authentication credentials were not provided.'})
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
 
 class TestFee(APITestCase):
-
     @classmethod
     def setUpTestData(cls):
 
         cls.client = APIClient()
 
         cls.admin_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234",
-            'first_name': "Jane",
-            'last_name': "Doe",
-            'is_seller': False,
-            'is_admin': True
+            "email": "admin@mail.com",
+            "password": "admin1234",
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "is_seller": False,
+            "is_admin": True,
         }
         # Creating admin user
         cls.client.post("/api/accounts/", cls.admin_data, format="json")
 
         cls.seller_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234",
-            'first_name': "John",
-            'last_name': "Doe",
-            'is_seller': True,
-            'is_admin': False
+            "email": "seller@mail.com",
+            "password": "seller1234",
+            "first_name": "John",
+            "last_name": "Doe",
+            "is_seller": True,
+            "is_admin": False,
         }
 
         # Creating seller user
         cls.client.post("/api/accounts/", cls.seller_data, format="json")
 
         cls.buyer_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234",
-            'first_name': "Mary",
-            'last_name': "Jane",
-            'is_seller': False,
-            'is_admin': False
+            "email": "buyer@mail.com",
+            "password": "buyer1234",
+            "first_name": "Mary",
+            "last_name": "Jane",
+            "is_seller": False,
+            "is_admin": False,
         }
 
         # Creating buyer user
         cls.client.post("/api/accounts/", cls.buyer_data, format="json")
 
-        cls.admin_login_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234"
-        }
+        cls.admin_login_data = {"email": "admin@mail.com", "password": "admin1234"}
 
-        cls.seller_login_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234"
-        }
+        cls.seller_login_data = {"email": "seller@mail.com", "password": "seller1234"}
 
-        cls.buyer_login_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234"
-        }
+        cls.buyer_login_data = {"email": "buyer@mail.com", "password": "buyer1234"}
 
         cls.fee_data = {
             "credit_fee": "0.06",
@@ -343,7 +315,8 @@ class TestFee(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/fee/", self.fee_data_wrong_fields, format="json")
+            "/api/fee/", self.fee_data_wrong_fields, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
@@ -363,8 +336,9 @@ class TestFee(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_buyer_create_fee_fail_403(self):
         # Login with buyer user
@@ -377,8 +351,9 @@ class TestFee(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_create_fee_fail_401(self):
         # Trying to create fee without authentication
@@ -386,8 +361,9 @@ class TestFee(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(output,
-                         {'detail': 'Authentication credentials were not provided.'})
+        self.assertEqual(
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
     def test_admin_list_fee_success_200(self):
         # Login with admin user
@@ -414,8 +390,9 @@ class TestFee(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_buyer_list_fee_fail_403(self):
         # Login with buyer user
@@ -428,8 +405,9 @@ class TestFee(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_list_fee_fail_401(self):
         # Trying to list fees without authentication
@@ -437,8 +415,9 @@ class TestFee(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(output,
-                         {'detail': 'Authentication credentials were not provided.'})
+        self.assertEqual(
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
     def test_admin_retrieve_fee_success_200(self):
         # Login with admin user
@@ -448,11 +427,12 @@ class TestFee(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # Creating fee and getting fee_id
-        fee_id = self.client.post(
-            "/api/fee/", self.fee_data, format="json"
-        ).json()["id"]
-
+        fee_id = self.client.post("/api/fee/", self.fee_data, format="json").json()[
+            "id"
+        ]
         response = self.client.get(f"/api/fee/{fee_id}/", format="json")
+        
+
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -469,9 +449,9 @@ class TestFee(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # Creating fee and getting fee_id
-        fee_id = self.client.post(
-            "/api/fee/", self.fee_data, format="json"
-        ).json()["id"]
+        fee_id = self.client.post("/api/fee/", self.fee_data, format="json").json()[
+            "id"
+        ]
 
         # Login with seller user and trying to retrieve fee
         token = self.client.post(
@@ -483,8 +463,9 @@ class TestFee(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_buyer_retrieve_fee_fail_403(self):
         # Login with admin user for creating fee
@@ -494,9 +475,9 @@ class TestFee(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # Creating fee and getting fee_id
-        fee_id = self.client.post(
-            "/api/fee/", self.fee_data, format="json"
-        ).json()["id"]
+        fee_id = self.client.post("/api/fee/", self.fee_data, format="json").json()[
+            "id"
+        ]
 
         # Login with buyer user and trying to retrieve fee
         token = self.client.post(
@@ -508,8 +489,9 @@ class TestFee(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_retrieve_fee_fail_401(self):
         # Login with admin user for creating fee
@@ -519,9 +501,9 @@ class TestFee(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # Creating fee and getting fee_id
-        fee_id = self.client.post(
-            "/api/fee/", self.fee_data, format="json"
-        ).json()["id"]
+        fee_id = self.client.post("/api/fee/", self.fee_data, format="json").json()[
+            "id"
+        ]
 
         # Trying to retrieve fee without authentication
         self.client.credentials()
@@ -530,80 +512,68 @@ class TestFee(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(output,
-                         {'detail': 'Authentication credentials were not provided.'})
+        self.assertEqual(
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
 
 class TestProducts(APITestCase):
-
     @classmethod
     def setUpTestData(cls):
 
         cls.client = APIClient()
 
         cls.admin_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234",
-            'first_name': "Jane",
-            'last_name': "Doe",
-            'is_seller': False,
-            'is_admin': True
+            "email": "admin@mail.com",
+            "password": "admin1234",
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "is_seller": False,
+            "is_admin": True,
         }
         # Creating admin user
         cls.client.post("/api/accounts/", cls.admin_data, format="json")
 
         cls.seller_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234",
-            'first_name': "John",
-            'last_name': "Doe",
-            'is_seller': True,
-            'is_admin': False
+            "email": "seller@mail.com",
+            "password": "seller1234",
+            "first_name": "John",
+            "last_name": "Doe",
+            "is_seller": True,
+            "is_admin": False,
         }
         # Creating seller user
         cls.client.post("/api/accounts/", cls.seller_data, format="json")
 
         cls.buyer_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234",
-            'first_name': "Mary",
-            'last_name': "Jane",
-            'is_seller': False,
-            'is_admin': False
+            "email": "buyer@mail.com",
+            "password": "buyer1234",
+            "first_name": "Mary",
+            "last_name": "Jane",
+            "is_seller": False,
+            "is_admin": False,
         }
         # Creating buyer user
         cls.client.post("/api/accounts/", cls.buyer_data, format="json")
 
-        cls.admin_login_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234"
-        }
+        cls.admin_login_data = {"email": "admin@mail.com", "password": "admin1234"}
 
-        cls.seller_login_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234"
-        }
+        cls.seller_login_data = {"email": "seller@mail.com", "password": "seller1234"}
 
-        cls.buyer_login_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234"
-        }
+        cls.buyer_login_data = {"email": "buyer@mail.com", "password": "buyer1234"}
 
         cls.product_data = {
             "description": "Smartband XYZ 3.0",
             "price": 100.99,
-            "quantity": 15
+            "quantity": 15,
         }
 
-        cls.wrong_product_data = {
-            "description": "Smartband XYZ 3.0",
-            "price": 100.99
-        }
+        cls.wrong_product_data = {"description": "Smartband XYZ 3.0", "price": 100.99}
 
         cls.update_product_data = {
             "description": "Smartband XYZ 3.0",
             "price": 99.99,
-            "quantity": 20
+            "quantity": 20,
         }
 
     def test_seller_create_product_success_201(self):
@@ -613,8 +583,7 @@ class TestProducts(APITestCase):
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.post(
-            "/api/products/", self.product_data, format="json")
+        response = self.client.post("/api/products/", self.product_data, format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 201)
@@ -636,7 +605,8 @@ class TestProducts(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/products/", self.wrong_product_data, format="json")
+            "/api/products/", self.wrong_product_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
@@ -649,13 +619,13 @@ class TestProducts(APITestCase):
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.post(
-            "/api/products/", self.product_data, format="json")
+        response = self.client.post("/api/products/", self.product_data, format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_buyer_create_product_fail_403(self):
         # Login with buyer user for creating product
@@ -664,23 +634,23 @@ class TestProducts(APITestCase):
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.post(
-            "/api/products/", self.product_data, format="json")
+        response = self.client.post("/api/products/", self.product_data, format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_create_product_fail_401(self):
         # Trying to create product without authentication
-        response = self.client.post(
-            "/api/products/", self.product_data, format="json")
+        response = self.client.post("/api/products/", self.product_data, format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(output,
-                         {'detail': 'Authentication credentials were not provided.'})
+        self.assertEqual(
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
     def test_list_products_200(self):
         # Listing all products without authentication
@@ -718,13 +688,13 @@ class TestProducts(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         product_id = self.client.post(
-            "/api/products/", self.product_data, format="json").json()["id"]
+            "/api/products/", self.product_data, format="json"
+        ).json()["id"]
 
         # Cleaning the authentication and trying to retrieve product
         self.client.credentials()
 
-        response = self.client.get(
-            f"/api/products/{product_id}/", format="json")
+        response = self.client.get(f"/api/products/{product_id}/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -734,8 +704,7 @@ class TestProducts(APITestCase):
     def test_retrieve_products_fail_wrong_id_404(self):
         product_id = "e7177066-a60e-11ec-b909-0242ac120002"
 
-        response = self.client.get(
-            f"/api/products/{product_id}/", format="json")
+        response = self.client.get(f"/api/products/{product_id}/", format="json")
 
         self.assertEqual(response.status_code, 404)
 
@@ -749,11 +718,10 @@ class TestProducts(APITestCase):
         # Getting seller_id from all users
         users = self.client.get("/api/accounts/", format="json").json()
         seller_id_list = [user["id"] for user in users if user["is_seller"]]
-        seller_id = ''.join(seller_id_list)
+        seller_id = "".join(seller_id_list)
 
         # Trying to list products by seller with seller_id
-        response = self.client.get(
-            f"/api/products/seller/{seller_id}/", format="json")
+        response = self.client.get(f"/api/products/seller/{seller_id}/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -772,8 +740,7 @@ class TestProducts(APITestCase):
         self.client.credentials()
 
         # Trying to list products by seller again
-        response = self.client.get(
-            f"/api/products/seller/{seller_id}/", format="json")
+        response = self.client.get(f"/api/products/seller/{seller_id}/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -785,8 +752,7 @@ class TestProducts(APITestCase):
         # Trying to list products by seller with wrong seller_id
         seller_id = "6e59272a-a611-11ec-b909-0242ac120002"
 
-        response = self.client.get(
-            f"/api/products/seller/{seller_id}/", format="json")
+        response = self.client.get(f"/api/products/seller/{seller_id}/", format="json")
 
         self.assertEqual(response.status_code, 404)
         self.assertDictEqual(response.json(), {"detail": "Not found."})
@@ -805,9 +771,8 @@ class TestProducts(APITestCase):
 
         # Trying to update product
         response = self.client.patch(
-            f"/api/products/{product_id}/",
-            self.update_product_data,
-            format="json")
+            f"/api/products/{product_id}/", self.update_product_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -819,12 +784,9 @@ class TestProducts(APITestCase):
         self.assertIn("seller", output)
 
         self.assertEqual(output["id"], product_id)
-        self.assertEqual(output["description"],
-                         self.update_product_data["description"])
-        self.assertEqual(output["price"],
-                         self.update_product_data["price"])
-        self.assertEqual(output["quantity"],
-                         self.update_product_data["quantity"])
+        self.assertEqual(output["description"], self.update_product_data["description"])
+        self.assertEqual(output["price"], self.update_product_data["price"])
+        self.assertEqual(output["quantity"], self.update_product_data["quantity"])
         self.assertTrue(output["is_active"])
 
     def test_seller_update_product_with_wrong_product_id_404(self):
@@ -839,9 +801,8 @@ class TestProducts(APITestCase):
 
         # Trying to update product
         response = self.client.patch(
-            f"/api/products/{product_id}/",
-            self.update_product_data,
-            format="json")
+            f"/api/products/{product_id}/", self.update_product_data, format="json"
+        )
 
         self.assertEqual(response.status_code, 404)
 
@@ -865,14 +826,14 @@ class TestProducts(APITestCase):
 
         # Trying to update product
         response = self.client.patch(
-            f"/api/products/{product_id}/",
-            self.update_product_data,
-            format="json")
+            f"/api/products/{product_id}/", self.update_product_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_buyer_update_product_fail_403(self):
         # Login with seller user for creating product
@@ -894,14 +855,14 @@ class TestProducts(APITestCase):
 
         # Trying to update product
         response = self.client.patch(
-            f"/api/products/{product_id}/",
-            self.update_product_data,
-            format="json")
+            f"/api/products/{product_id}/", self.update_product_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_update_product_fail_401(self):
         # Login with seller user for creating product
@@ -920,77 +881,67 @@ class TestProducts(APITestCase):
 
         # Trying to update product
         response = self.client.patch(
-            f"/api/products/{product_id}/",
-            self.update_product_data,
-            format="json")
+            f"/api/products/{product_id}/", self.update_product_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(output,
-                         {'detail': 'Authentication credentials were not provided.'})
+        self.assertEqual(
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
 
 class TestPaymentInfo(APITestCase):
-
     @classmethod
     def setUpTestData(cls):
 
         cls.client = APIClient()
 
         cls.admin_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234",
-            'first_name': "Jane",
-            'last_name': "Doe",
-            'is_seller': False,
-            'is_admin': True
+            "email": "admin@mail.com",
+            "password": "admin1234",
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "is_seller": False,
+            "is_admin": True,
         }
         # Creating admin user
         cls.client.post("/api/accounts/", cls.admin_data, format="json")
 
         cls.seller_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234",
-            'first_name': "John",
-            'last_name': "Doe",
-            'is_seller': True,
-            'is_admin': False
+            "email": "seller@mail.com",
+            "password": "seller1234",
+            "first_name": "John",
+            "last_name": "Doe",
+            "is_seller": True,
+            "is_admin": False,
         }
         # Creating seller user
         cls.client.post("/api/accounts/", cls.seller_data, format="json")
 
         cls.buyer_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234",
-            'first_name': "Mary",
-            'last_name': "Jane",
-            'is_seller': False,
-            'is_admin': False
+            "email": "buyer@mail.com",
+            "password": "buyer1234",
+            "first_name": "Mary",
+            "last_name": "Jane",
+            "is_seller": False,
+            "is_admin": False,
         }
         # Creating buyer user
         cls.client.post("/api/accounts/", cls.buyer_data, format="json")
 
-        cls.admin_login_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234"
-        }
+        cls.admin_login_data = {"email": "admin@mail.com", "password": "admin1234"}
 
-        cls.seller_login_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234"
-        }
+        cls.seller_login_data = {"email": "seller@mail.com", "password": "seller1234"}
 
-        cls.buyer_login_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234"
-        }
+        cls.buyer_login_data = {"email": "buyer@mail.com", "password": "buyer1234"}
 
         cls.payment_data = {
             "payment_method": "debit",
             "card_number": "1234567812345678",
             "cardholders_name": "MARIANA F SOUZA",
             "card_expiring_date": "2022-04-01",
-            "cvv": 456
+            "cvv": 456,
         }
 
         cls.wrong_payment_data = {
@@ -1008,7 +959,8 @@ class TestPaymentInfo(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/payment_info/", self.payment_data, format="json")
+            "/api/payment_info/", self.payment_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 201)
@@ -1020,8 +972,9 @@ class TestPaymentInfo(APITestCase):
         self.assertIn("is_active", output)
         self.assertIn("customer", output)
         self.assertNotIn("cvv", output)
-        self.assertNotEqual(output["card_number_info"],
-                            self.payment_data["card_number"])
+        self.assertNotEqual(
+            output["card_number_info"], self.payment_data["card_number"]
+        )
 
     def test_buyer_create_payment_info_already_exists_fail_422(self):
         # Login with buyer user
@@ -1031,16 +984,17 @@ class TestPaymentInfo(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # Trying to create same card twice
-        self.client.post(
-            "/api/payment_info/", self.payment_data, format="json")
+        self.client.post("/api/payment_info/", self.payment_data, format="json")
 
         response = self.client.post(
-            "/api/payment_info/", self.payment_data, format="json")
+            "/api/payment_info/", self.payment_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 422)
         self.assertDictEqual(
-            output, {"error": ["This card is already registered for this user"]})
+            output, {"error": ["This card is already registered for this user"]}
+        )
 
     def test_buyer_create_payment_info_with_wrong_fields_fail_400(self):
         # Login with buyer user
@@ -1050,7 +1004,8 @@ class TestPaymentInfo(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/payment_info/", self.wrong_payment_data, format="json")
+            "/api/payment_info/", self.wrong_payment_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
@@ -1065,12 +1020,14 @@ class TestPaymentInfo(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/payment_info/", self.payment_data, format="json")
+            "/api/payment_info/", self.payment_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_admin_create_payment_info_fail_403(self):
         # Login with admin user
@@ -1080,22 +1037,26 @@ class TestPaymentInfo(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/payment_info/", self.payment_data, format="json")
+            "/api/payment_info/", self.payment_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_create_payment_info_fail_401(self):
         # Trying to create payment info without authentication
         response = self.client.post(
-            "/api/payment_info/", self.payment_data, format="json")
+            "/api/payment_info/", self.payment_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(output,
-                         {'detail': 'Authentication credentials were not provided.'})
+        self.assertEqual(
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
     def test_buyer_list_payment_info_success_200(self):
         # Login with buyer user
@@ -1112,8 +1073,7 @@ class TestPaymentInfo(APITestCase):
         self.assertEqual(output, [])
 
         # Creating a payment info for testing the list again
-        self.client.post(
-            "/api/payment_info/", self.payment_data, format="json")
+        self.client.post("/api/payment_info/", self.payment_data, format="json")
 
         response = self.client.get("/api/payment_info/", format="json")
         output = response.json()
@@ -1133,8 +1093,9 @@ class TestPaymentInfo(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_admin_list_payment_info_fail_403(self):
         # Login with admin user
@@ -1147,8 +1108,9 @@ class TestPaymentInfo(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_list_payment_info_fail_401(self):
         # Trying to list payment info without authentication
@@ -1156,8 +1118,9 @@ class TestPaymentInfo(APITestCase):
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(output,
-                         {'detail': 'Authentication credentials were not provided.'})
+        self.assertEqual(
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
 
 class TestTransactionsAndPayables(APITestCase):
@@ -1169,28 +1132,25 @@ class TestTransactionsAndPayables(APITestCase):
 
         # Creating admin user
         cls.admin_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234",
-            'first_name': "Jane",
-            'last_name': "Doe",
-            'is_seller': False,
-            'is_admin': True
+            "email": "admin@mail.com",
+            "password": "admin1234",
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "is_seller": False,
+            "is_admin": True,
         }
         cls.client.post("/api/accounts/", cls.admin_data, format="json")
 
-        cls.admin_login_data = {
-            'email': "admin@mail.com",
-            'password': "admin1234"
-        }
+        cls.admin_login_data = {"email": "admin@mail.com", "password": "admin1234"}
 
         # Creating seller user
         cls.seller_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234",
-            'first_name': "John",
-            'last_name': "Doe",
-            'is_seller': True,
-            'is_admin': False
+            "email": "seller@mail.com",
+            "password": "seller1234",
+            "first_name": "John",
+            "last_name": "Doe",
+            "is_seller": True,
+            "is_admin": False,
         }
 
         cls.seller_id = cls.client.post(
@@ -1198,10 +1158,7 @@ class TestTransactionsAndPayables(APITestCase):
         ).json()["id"]
 
         # Login with seller for creating 3 products
-        cls.seller_login_data = {
-            'email': "seller@mail.com",
-            'password': "seller1234"
-        }
+        cls.seller_login_data = {"email": "seller@mail.com", "password": "seller1234"}
 
         token = cls.client.post(
             "/api/login/", cls.seller_login_data, format="json"
@@ -1223,24 +1180,23 @@ class TestTransactionsAndPayables(APITestCase):
                 "description": "Smartband XPTO 3.0",
                 "price": 899.99,
                 "quantity": 19,
-            }
+            },
         ]
 
         # create products seller
         cls.product_id_list = [
-            cls.client.post(
-                "/api/products/", product, format="json"
-            ).json()["id"]
-            for product in cls.products_to_create]
+            cls.client.post("/api/products/", product, format="json").json()["id"]
+            for product in cls.products_to_create
+        ]
 
         # Creating seller 2 user
         cls.seller_data_2 = {
-            'email': "seller2@mail.com",
-            'password': "seller1234",
-            'first_name': "John",
-            'last_name': "Doe",
-            'is_seller': True,
-            'is_admin': False
+            "email": "seller2@mail.com",
+            "password": "seller1234",
+            "first_name": "John",
+            "last_name": "Doe",
+            "is_seller": True,
+            "is_admin": False,
         }
 
         cls.seller_id_2 = cls.client.post(
@@ -1249,8 +1205,8 @@ class TestTransactionsAndPayables(APITestCase):
 
         # Login with seller for creating 3 products
         cls.seller_login_data_2 = {
-            'email': "seller2@mail.com",
-            'password': "seller1234"
+            "email": "seller2@mail.com",
+            "password": "seller1234",
         }
 
         token = cls.client.post(
@@ -1260,27 +1216,23 @@ class TestTransactionsAndPayables(APITestCase):
 
         # create products seller
         cls.product_id_list_2 = [
-            cls.client.post(
-                "/api/products/", product, format="json"
-            ).json()["id"]
-            for product in cls.products_to_create]
+            cls.client.post("/api/products/", product, format="json").json()["id"]
+            for product in cls.products_to_create
+        ]
 
         # Creating buyer user
         cls.buyer_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234",
-            'first_name': "Mary",
-            'last_name': "Jane",
-            'is_seller': False,
-            'is_admin': False
+            "email": "buyer@mail.com",
+            "password": "buyer1234",
+            "first_name": "Mary",
+            "last_name": "Jane",
+            "is_seller": False,
+            "is_admin": False,
         }
         cls.client.post("/api/accounts/", cls.buyer_data, format="json")
 
         # Login with buyer user for creating payment info
-        cls.buyer_login_data = {
-            'email': "buyer@mail.com",
-            'password': "buyer1234"
-        }
+        cls.buyer_login_data = {"email": "buyer@mail.com", "password": "buyer1234"}
 
         token = cls.client.post(
             "/api/login/", cls.buyer_login_data, format="json"
@@ -1292,7 +1244,7 @@ class TestTransactionsAndPayables(APITestCase):
             "card_number": "1234567812345678",
             "cardholders_name": "MARIANA F SOUZA",
             "card_expiring_date": "2028-04-01",
-            "cvv": 456
+            "cvv": 456,
         }
 
         cls.payment_data_2 = {
@@ -1300,111 +1252,63 @@ class TestTransactionsAndPayables(APITestCase):
             "card_number": "1234567812345678",
             "cardholders_name": "MARIANA F SOUZA",
             "card_expiring_date": "2030-04-01",
-            "cvv": 123
+            "cvv": 123,
         }
 
         cls.payment_info_id = cls.client.post(
-            "/api/payment_info/",
-            cls.payment_data,
-            format="json"
+            "/api/payment_info/", cls.payment_data, format="json"
         ).json()["id"]
 
         cls.payment_info_id_2 = cls.client.post(
-            "/api/payment_info/",
-            cls.payment_data_2,
-            format="json"
+            "/api/payment_info/", cls.payment_data_2, format="json"
         ).json()["id"]
 
         cls.transaction_data = {
             "seller": {
                 "id": f"{cls.seller_id}",
                 "products": [
-                    {
-                        "id": f"{cls.product_id_list[0]}",
-                        "quantity": 2
-                    },
-                    {
-                        "id": f"{cls.product_id_list[1]}",
-                        "quantity": 5
-                    },
-                    {
-                        "id": f"{cls.product_id_list[2]}",
-                        "quantity": 1
-                    }
-                ]
+                    {"id": f"{cls.product_id_list[0]}", "quantity": 2},
+                    {"id": f"{cls.product_id_list[1]}", "quantity": 5},
+                    {"id": f"{cls.product_id_list[2]}", "quantity": 1},
+                ],
             },
-            "payment_info": {
-                "id":  f"{cls.payment_info_id}"
-            }
+            "payment_info": {"id": f"{cls.payment_info_id}"},
         }
 
         cls.transaction_data_2 = {
             "seller": {
                 "id": f"{cls.seller_id_2}",
                 "products": [
-                    {
-                        "id": f"{cls.product_id_list_2[0]}",
-                        "quantity": 2
-                    },
-                    {
-                        "id": f"{cls.product_id_list_2[1]}",
-                        "quantity": 5
-                    },
-                    {
-                        "id": f"{cls.product_id_list_2[2]}",
-                        "quantity": 1
-                    }
-                ]
+                    {"id": f"{cls.product_id_list_2[0]}", "quantity": 2},
+                    {"id": f"{cls.product_id_list_2[1]}", "quantity": 5},
+                    {"id": f"{cls.product_id_list_2[2]}", "quantity": 1},
+                ],
             },
-            "payment_info": {
-                "id":  f"{cls.payment_info_id}"
-            }
+            "payment_info": {"id": f"{cls.payment_info_id}"},
         }
 
         cls.transaction_data_3 = {
             "seller": {
                 "id": f"{cls.seller_id_2}",
                 "products": [
-                    {
-                        "id": f"{cls.product_id_list_2[0]}",
-                        "quantity": 2
-                    },
-                    {
-                        "id": f"{cls.product_id_list_2[1]}",
-                        "quantity": 5
-                    },
-                    {
-                        "id": f"{cls.product_id_list_2[2]}",
-                        "quantity": 1
-                    }
-                ]
+                    {"id": f"{cls.product_id_list_2[0]}", "quantity": 2},
+                    {"id": f"{cls.product_id_list_2[1]}", "quantity": 5},
+                    {"id": f"{cls.product_id_list_2[2]}", "quantity": 1},
+                ],
             },
-            "payment_info": {
-                "id":  f"{cls.payment_info_id_2}"
-            }
+            "payment_info": {"id": f"{cls.payment_info_id_2}"},
         }
 
         cls.transaction_wrong_data = {
             "selle": {
                 "id": f"{cls.seller_id}",
                 "product": [
-                    {
-                        "id": f"{cls.product_id_list[0]}",
-                        "quantity": 2
-                    },
-                    {
-                        "id": f"{cls.product_id_list[1]}",
-                        "quantity": 5
-                    },
-                    {
-                        "id": f"{cls.product_id_list[2]}",
-                        "quantity": 1
-                    }
-                ]
+                    {"id": f"{cls.product_id_list[0]}", "quantity": 2},
+                    {"id": f"{cls.product_id_list[1]}", "quantity": 5},
+                    {"id": f"{cls.product_id_list[2]}", "quantity": 1},
+                ],
             },
-            "payment": {
-                "id":  f"{cls.payment_info_id}"
-            }
+            "payment": {"id": f"{cls.payment_info_id}"},
         }
 
         cls.error_transaction_response = {
@@ -1412,7 +1316,7 @@ class TestTransactionsAndPayables(APITestCase):
                 "All products must belong to the same seller",
                 "Product does not exist",
                 "Product is not available",
-                "Product is not active"
+                "Product is not active",
             ]
         }
 
@@ -1424,7 +1328,8 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+            "/api/transactions/", self.transaction_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 201)
@@ -1440,7 +1345,8 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/transactions/", self.transaction_wrong_data, format="json")
+            "/api/transactions/", self.transaction_wrong_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
@@ -1455,16 +1361,19 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         transaction_data = self.transaction_data
-        transaction_data['seller']['id'] = "9561f105-0efa-4a1f-adc1-f7475b3868a4"
+        transaction_data["seller"]["id"] = "9561f105-0efa-4a1f-adc1-f7475b3868a4"
 
         response = self.client.post(
-            "/api/transactions/", transaction_data, format="json")
+            "/api/transactions/", transaction_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
         self.assertDictEqual(output, self.error_transaction_response)
 
-    def test_buyer_create_transaction_fail_product_id_product_doesnt_belongs_to_seller(self):
+    def test_buyer_create_transaction_fail_product_id_product_doesnt_belongs_to_seller(
+        self,
+    ):
         # Login with buyer user
         token = self.client.post(
             "/api/login/", self.buyer_login_data, format="json"
@@ -1472,10 +1381,13 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         transaction_data = self.transaction_data
-        transaction_data['seller']['products'][0]['id'] = "9561f105-0efa-4a1f-adc1-f7475b3868a4"
+        transaction_data["seller"]["products"][0][
+            "id"
+        ] = "9561f105-0efa-4a1f-adc1-f7475b3868a4"
 
         response = self.client.post(
-            "/api/transactions/", transaction_data, format="json")
+            "/api/transactions/", transaction_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
@@ -1489,10 +1401,11 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         transaction_data = self.transaction_data
-        transaction_data['seller']['products'][0]['quantity'] = 50
+        transaction_data["seller"]["products"][0]["quantity"] = 50
 
         response = self.client.post(
-            "/api/transactions/", transaction_data, format="json")
+            "/api/transactions/", transaction_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
@@ -1506,15 +1419,17 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         transaction_data = self.transaction_data
-        transaction_data['payment_info']['id'] = "4005e118-75a9-4ef9-80cf-942e0911b90f"
+        transaction_data["payment_info"]["id"] = "4005e118-75a9-4ef9-80cf-942e0911b90f"
 
         response = self.client.post(
-            "/api/transactions/", transaction_data, format="json")
+            "/api/transactions/", transaction_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
         self.assertDictEqual(
-            output, {"detail": "You do not have permission to perform this action."})
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_buyer_create_transaction_fail_cart_is_expired(self):
         # Login with buyer user
@@ -1524,11 +1439,12 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         payment_info = PaymentInfo.objects.get(id=self.payment_info_id)
-        payment_info.card_expiring_date = '1900-04-01'
+        payment_info.card_expiring_date = "1900-04-01"
         payment_info.save()
 
         response = self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+            "/api/transactions/", self.transaction_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 400)
@@ -1542,18 +1458,16 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # Realiza a transação
-        self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+        self.client.post("/api/transactions/", self.transaction_data, format="json")
 
         # Lists the products, the quantity must be subtracted from the transaction made
-        response = self.client.get(
-            "/api/products/", format="json")
+        response = self.client.get("/api/products/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertIs(output[0]['quantity'], 13)
-        self.assertIs(output[1]['quantity'], 5)
-        self.assertIs(output[2]['quantity'], 18)
+        self.assertIs(output[0]["quantity"], 13)
+        self.assertIs(output[1]["quantity"], 5)
+        self.assertIs(output[2]["quantity"], 18)
 
     def test_admin_create_transaction_fail_403(self):
         # Login with admin user
@@ -1563,12 +1477,14 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+            "/api/transactions/", self.transaction_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_seller_create_transaction_fail_403(self):
         # Login with seller user
@@ -1578,24 +1494,28 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         response = self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+            "/api/transactions/", self.transaction_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(output,
-                         {'detail': 'You do not have permission to perform this action.'})
+        self.assertEqual(
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_create_transaction_fail_401(self):
         # No credentials
         self.client.credentials()
 
         response = self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+            "/api/transactions/", self.transaction_data, format="json"
+        )
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(output,
-                         {"detail": "Authentication credentials were not provided."})
+        self.assertEqual(
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
     def test_seller_list_transactions_success_200(self):
         # Login with buyer user
@@ -1605,11 +1525,9 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # create 2 transactions
-        self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+        self.client.post("/api/transactions/", self.transaction_data, format="json")
 
-        self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+        self.client.post("/api/transactions/", self.transaction_data, format="json")
 
         # Login with seller user
         token = self.client.post(
@@ -1618,8 +1536,7 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # list transactions
-        response = self.client.get(
-            "/api/transactions/", format="json")
+        response = self.client.get("/api/transactions/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -1633,13 +1550,13 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # list transactions
-        response = self.client.get(
-            "/api/transactions/", format="json")
+        response = self.client.get("/api/transactions/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            output, {"detail": "You do not have permission to perform this action."})
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_admin_list_transactions_success_200(self):
         # Login with buyer user
@@ -1649,12 +1566,10 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # create transaction seller 1
-        self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+        self.client.post("/api/transactions/", self.transaction_data, format="json")
 
         # create transaction seller 2
-        self.client.post(
-            "/api/transactions/", self.transaction_data_2, format="json")
+        self.client.post("/api/transactions/", self.transaction_data_2, format="json")
 
         # Login with admin user
         token = self.client.post(
@@ -1662,7 +1577,7 @@ class TestTransactionsAndPayables(APITestCase):
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.get('/api/transactions/', format='json')
+        response = self.client.get("/api/transactions/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -1676,12 +1591,10 @@ class TestTransactionsAndPayables(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
         # create transaction seller 1
-        self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+        self.client.post("/api/transactions/", self.transaction_data, format="json")
 
         # create transaction seller 2
-        self.client.post(
-            "/api/transactions/", self.transaction_data_2, format="json")
+        self.client.post("/api/transactions/", self.transaction_data_2, format="json")
 
         # Login with seller user
         token = self.client.post(
@@ -1689,7 +1602,7 @@ class TestTransactionsAndPayables(APITestCase):
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.get('/api/transactions/', format='json')
+        response = self.client.get("/api/transactions/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -1699,12 +1612,13 @@ class TestTransactionsAndPayables(APITestCase):
         # No credentials
         self.client.credentials()
 
-        response = self.client.get('/api/transactions/', format='json')
+        response = self.client.get("/api/transactions/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
         self.assertDictEqual(
-            output, {"detail": "Authentication credentials were not provided."})
+            output, {"detail": "Authentication credentials were not provided."}
+        )
 
     def test_seller_list_payables_success_200(self):
         # Login with buyer user
@@ -1715,19 +1629,15 @@ class TestTransactionsAndPayables(APITestCase):
 
         # create 2 transactions seller 1
         # debit transaction
-        self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+        self.client.post("/api/transactions/", self.transaction_data, format="json")
         #  debi transaction
-        self.client.post(
-            "/api/transactions/", self.transaction_data, format="json")
+        self.client.post("/api/transactions/", self.transaction_data, format="json")
 
         # create 2 transactions seller 2
         # debit transaction
-        self.client.post(
-            "/api/transactions/", self.transaction_data_2, format="json")
+        self.client.post("/api/transactions/", self.transaction_data_2, format="json")
         # credit transaction
-        self.client.post(
-            "/api/transactions/", self.transaction_data_3, format="json")
+        self.client.post("/api/transactions/", self.transaction_data_3, format="json")
 
         # Login with seller 1 user
         token = self.client.post(
@@ -1735,7 +1645,7 @@ class TestTransactionsAndPayables(APITestCase):
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.get('/api/payables/', format='json')
+        response = self.client.get("/api/payables/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -1748,7 +1658,7 @@ class TestTransactionsAndPayables(APITestCase):
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.get('/api/payables/', format='json')
+        response = self.client.get("/api/payables/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -1765,10 +1675,12 @@ class TestTransactionsAndPayables(APITestCase):
         # create 2 transactions seller 2
         # debit transaction
         transaction_1 = self.client.post(
-            "/api/transactions/", self.transaction_data_2, format="json")
+            "/api/transactions/", self.transaction_data_2, format="json"
+        )
         # credit transaction
         transaction_2 = self.client.post(
-            "/api/transactions/", self.transaction_data_3, format="json")
+            "/api/transactions/", self.transaction_data_3, format="json"
+        )
 
         # Login with seller 2 user
         token = self.client.post(
@@ -1776,19 +1688,18 @@ class TestTransactionsAndPayables(APITestCase):
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.get('/api/payables/', format='json')
+        response = self.client.get("/api/payables/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(output["payable_amount_paid"], 2674.21)
         self.assertEqual(output["payable_amount_waiting_funds"], 2619.07)
 
-        payable = Payable.objects.get(
-            transaction_id=transaction_2.json()['id'])
+        payable = Payable.objects.get(transaction_id=transaction_2.json()["id"])
         payable.payment_date = "2022-01-01"
         payable.save()
 
-        response = self.client.get('/api/payables/', format='json')
+        response = self.client.get("/api/payables/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 200)
@@ -1802,34 +1713,37 @@ class TestTransactionsAndPayables(APITestCase):
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.get('/api/payables/', format='json')
+        response = self.client.get("/api/payables/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            output, {"detail": "You do not have permission to perform this action."})
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_admin_list_payables_fail_403(self):
-       # Login with admin user
+        # Login with admin user
         token = self.client.post(
             "/api/login/", self.admin_login_data, format="json"
         ).json()["token"]
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
 
-        response = self.client.get('/api/payables/', format='json')
+        response = self.client.get("/api/payables/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            output, {"detail": "You do not have permission to perform this action."})
+            output, {"detail": "You do not have permission to perform this action."}
+        )
 
     def test_anonymous_list_payables_fail_401(self):
         # Login with anonymous user
         self.client.credentials()
 
-        response = self.client.get('/api/payables/', format='json')
+        response = self.client.get("/api/payables/", format="json")
         output = response.json()
 
         self.assertEqual(response.status_code, 401)
         self.assertEqual(
-            output, {"detail": "Authentication credentials were not provided."})
+            output, {"detail": "Authentication credentials were not provided."}
+        )
