@@ -29,9 +29,11 @@ class TransactionsView(APIView):
 
         payment_card: PaymentInfo = PaymentInfo.objects.filter(id=payment_info).first()
         if not isExpired(str(payment_card.card_expiring_date)):
-            return Response({"error": "card expireted"}, 400)
+            return Response({"error": ["This card is expired"]}, 400)
+
+        error = []   
         if payment_card.customer.id != request.user.id:
-            return Response({"error": "ta clonando pq ?"}, 403)
+            return Response({"error": "ta clonando pq ?"}, 400)
 
         transactions: Transaction = Transaction.objects.create(
             payment_info_id=payment_info, seller_id=seller
@@ -39,7 +41,9 @@ class TransactionsView(APIView):
 
         seller: Users = Users.objects.filter(id=seller).first()
         if not seller:
-            return Response({"error": "nao existe seller"}, 404)
+            return Response(
+                {"error": ["All products must belong to the same seller"]}, 400
+            )
         # ver melhor forma, ou ver antes de fazer a ordem ou depois
         # se depois verificar a melhor forma de retornar o erro.
         value = 0
@@ -48,11 +52,11 @@ class TransactionsView(APIView):
                 id=product["id"]
             ).first()
             if not product_filtred:
-                return Response({"error": "nao existe product"}, 404)
+                return Response({"error": "nao existe product"}, 400)
             if product_filtred.quantity < product["quantity"]:
-                return Response({"error": "quantidade menor"}, 404)
+                return Response({"error": "quantidade menor"}, 400)
             if not product_filtred.is_active:
-                return Response({"error": "produto nao esta ativo"}, 404)
+                return Response({"error": "produto nao esta ativo"}, 400)
 
             Order.objects.create(
                 quantity=product["quantity"],
@@ -93,9 +97,7 @@ class TransactionsView(APIView):
 
     def get(self, request: Request):
         payables = Payable.objects.all()
-        print(payables)
         if request.user.is_seller:
-            print("nao entrou")
             payables = payables.filter(seller_id=request.user.id).all()
         serializer = PayablesSerializer(payables, many=True)
 
