@@ -97,9 +97,11 @@ class ProductGetPatchView(generics.GenericAPIView):
 class ProductListSellerId(generics.ListAPIView):
     def get(self, _: Request, seller_id):
 
-        products = Products.objects.filter(id=seller_id)
-        if not products.first():
+        seller: Users = Users.objects.filter(id=seller_id).first()
+        if not seller:
             return Response({"detail": "Not found."}, HTTP_404_NOT_FOUND)
 
-        serialiser = ProductsSerializers(products.all(), many=True)
+        serialiser = ProductsSerializers(
+            Products.objects.filter(seller_id=seller_id).all(), many=True
+        )
         return Response(serialiser.data, HTTP_200_OK)

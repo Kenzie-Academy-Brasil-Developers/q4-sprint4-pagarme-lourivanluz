@@ -431,7 +431,6 @@ class TestFee(APITestCase):
             "id"
         ]
         response = self.client.get(f"/api/fee/{fee_id}/", format="json")
-        
 
         output = response.json()
 
@@ -940,7 +939,7 @@ class TestPaymentInfo(APITestCase):
             "payment_method": "debit",
             "card_number": "1234567812345678",
             "cardholders_name": "MARIANA F SOUZA",
-            "card_expiring_date": "2022-04-01",
+            "card_expiring_date": "2022-07-01",
             "cvv": 456,
         }
 
@@ -948,7 +947,7 @@ class TestPaymentInfo(APITestCase):
             "method": "debit",
             "card_number": "1234567812345678",
             "cardholders_name": "MARIANA F SOUZA",
-            "card_expiring_date": "2022-04-01",
+            "card_expiring_date": "2022-07-01",
         }
 
     def test_buyer_create_payment_info_success_200(self):
